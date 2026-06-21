@@ -2,8 +2,6 @@
 
 #include "util.hpp"
 
-#include <cmath>
-
 LoadingDialog* LoadingDialog::build() {
   brls::Box* contentView = new brls::Box(brls::Axis::COLUMN);
   contentView->setHeight(300.0f);
@@ -15,18 +13,6 @@ LoadingDialog* LoadingDialog::build() {
 
 void LoadingDialog::open() {
   brls::Application::pushActivity(new brls::Activity(this));
-
-  this->watchProgress.store(true);
-  new std::thread([this]() {
-    while(this->watchProgress.load()) {
-      float progress = this->progress.load();
-      this->progressLabel->setText(
-        Util::toPercentLabel(progress)
-      );
-      this->progressBar->setProgress(progress);
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    }
-  });
 }
 
 void LoadingDialog::setAction(const std::string& action) {
@@ -45,7 +31,7 @@ std::atomic<float>& LoadingDialog::getAtomicProgress() {
   return this->progress;
 }
 
-LoadingDialog::LoadingDialog(Box* contentView): brls::Dialog(contentView) {
+LoadingDialog::LoadingDialog(Box* contentView): brls::DismissDialog(contentView) {
   this->label = new brls::Label();
   this->label->setText("Please wait...");
   contentView->addView(this->label);
@@ -64,5 +50,4 @@ LoadingDialog::LoadingDialog(Box* contentView): brls::Dialog(contentView) {
 }
 
 LoadingDialog::~LoadingDialog() {
-  this->watchProgress.store(false);
 }

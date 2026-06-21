@@ -8,8 +8,6 @@
  */
 namespace Util {
 
-    std::string toPercentLabel(float fractional);
-
     /**
      * Sets the box's padding to the amount that's commonly used for tab content.
      */
@@ -21,7 +19,7 @@ namespace Util {
      * @param warning Short message warning the user of what will happen
      * @param action Shorter message describing the action being performed in present tense
      * @param task The functionality that performs the action.
-     *             The parameter is a reactive atomic percentage value from 0 to 1 to update the progress bar.
+     *             The parameter is a reactive atomic percentage value from 0 to 1.
      * @param finishedCallback Optional; functionality to perform after the action completes
      */
     brls::Dialog* buildConfirmDialog(

@@ -30,22 +30,4 @@
     lineColor="#D0D0D0"
   />
 
-  <brls:Label
-    width="100%"
-    text="For those upgrading from the original SimpleModManager:"
-    marginBottom="20px"
-  />
-
-  <brls:Button
-    id="migrate"
-    width="80%"
-    text="Bring over old SimpleModManager mods"
-  />
-
-  <brls:Label
-    width="100%"
-    text="This will automatically move all mods on the SD card that were set up for the original SimpleModManager to work with this manager."
-    marginTop="20px"
-  />
-
 </brls:Box>

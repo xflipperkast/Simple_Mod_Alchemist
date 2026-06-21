@@ -111,6 +111,8 @@ void ModBrowser::handleModSelect(const ModSource& mod, size_t selectedIndex) {
 }
 
 void ModBrowser::configureModSelector(brls::SelectorCell* selector, ModSource& mod, const int& index) {
+  selector->getEvent()->clear();
+  selector->getFocusEvent()->clear();
   selector->init(
     mod.getSource(),
     mod.getOptions(),

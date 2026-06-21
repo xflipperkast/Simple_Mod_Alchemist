@@ -2,13 +2,14 @@
 
 #include "borealis.hpp"
 
+#include "dismiss_dialog.hpp"
 #include "progress_bar.hpp"
 
 #include <string>
 #include <atomic>
 
 
-class LoadingDialog : public brls::Dialog
+class LoadingDialog : public brls::DismissDialog
 {
   public:
     static LoadingDialog* build();
@@ -27,7 +28,6 @@ class LoadingDialog : public brls::Dialog
 
     std::string action;
     std::atomic<float> progress{0};
-    std::atomic<bool> watchProgress{false};
 
     brls::Label* label{nullptr};
     brls::Label* progressLabel{nullptr};

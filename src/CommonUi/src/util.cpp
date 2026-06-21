@@ -2,17 +2,6 @@
 
 #include "loading_dialog.hpp"
 
-#include <iostream>
-#include <sstream>
-#include <iomanip>
-
-
-std::string Util::toPercentLabel(float fractional) {
-    std::stringstream stream;
-    stream << std::fixed << std::setprecision(0) << std::round(fractional * 100);
-    return stream.str() + "%";
-}
-
 void Util::padContent(brls::Box* content) {
   brls::Style style = brls::Application::getStyle();
   content->setPadding(
@@ -36,10 +25,12 @@ brls::Dialog* Util::buildConfirmDialog(
     loadingDialog->setAction(action);
     loadingDialog->open();
 
-    new std::thread([task, finishedCallback, loadingDialog]() {
+    std::thread([task, finishedCallback, loadingDialog]() {
       task(loadingDialog->getAtomicProgress());
-      loadingDialog->close(finishedCallback);
-    });
+      brls::sync([loadingDialog, finishedCallback]() {
+        loadingDialog->close(finishedCallback);
+      });
+    }).detach();
   });
   dialog->addButton("No", []() {});
 

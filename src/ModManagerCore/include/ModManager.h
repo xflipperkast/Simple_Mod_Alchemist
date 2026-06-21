@@ -20,7 +20,7 @@ class ModSource {
   public:
 
     // Option used for the setting to turn a mod off
-    const std::string _DEFAULT_OPTION_{"UNMODIFIED"}; 
+    const std::string _DEFAULT_OPTION_{"Disabled"};
 
     /**
      * @param source_ String label of the name of the moddable thing (source)
