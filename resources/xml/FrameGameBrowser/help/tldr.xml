@@ -14,7 +14,7 @@
 
     <brls:Label
         width="100%"
-        text="1. A folder named `mod_alchemy` now exists on your SD root. Within it, create a folder with the name of a game's title ID."
+        text="1. A folder named `nx-modloader-gx` now exists in switch folder. Within it, create a folder with the name of a game's title ID."
         marginBottom="40px"
     />
 

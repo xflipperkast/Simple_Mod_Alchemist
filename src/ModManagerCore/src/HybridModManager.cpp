@@ -224,7 +224,6 @@ namespace {
 
   void ensureLayerStaged(const fs::path& contents, const fs::path& packRoot, const std::string& pack, const std::string& layer) {
     auto staged = stagedLayer(contents, layer, pack);
-    // ponytail: staging is a generated cache; delete the staged/live layer to force recopy after editing pack files.
     if (fs::exists(staged)) return;
     if (!fs::exists(packRoot / layer)) throw std::runtime_error("Selected modpack layer is missing.");
     fs::copy(packRoot / layer, staged, fs::copy_options::recursive);

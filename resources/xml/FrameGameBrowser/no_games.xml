@@ -13,7 +13,7 @@
     id="top-note"
     width="100%"
     title="No game folders found. Folders should be organized like this:"
-    note="SD:/mod-alchemy/[title-id-of-the-game]/[group]/[thing-being-replaced]/[mod-name]/[mod-files-and-folders]"
+    note="SD:/switch/nx-modloader-gx/[title-id-of-the-game]/[group]/[thing-being-replaced]/[mod-name]/[mod-files-and-folders]"
   />
 
   <brls:NoteCell

@@ -41,7 +41,6 @@ namespace {
 
   void logApplyError(const char* action, u64 titleId, const std::string& id, const std::string& error) {
     try {
-      // ponytail: errors-only one-file log; promote to shared logger only if more callsites need it.
       std::filesystem::create_directories("/switch/Simple_Mod_alchemist");
       std::ofstream out("/switch/Simple_Mod_alchemist/error.log", std::ios::app);
       out << "action=" << action
@@ -100,7 +99,6 @@ void TabHybridMods::reload() {
         brls::sync([this, loading, error]() {
           loading->close([this, error]() {
             if (!error.empty()) brls::Application::notify("Apply failed: " + error);
-            // ponytail: clear focus before deleting the selected row; Borealis keeps a raw currentFocus pointer.
             brls::Application::giveFocus(nullptr);
             this->reload();
             brls::Application::giveFocus(this->getDefaultFocus());
