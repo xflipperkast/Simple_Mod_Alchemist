@@ -167,6 +167,37 @@ bool FsManager::hasFilesDeep(const std::string& path) {
   return hasFiles;
 }
 
+std::vector<std::string> FsManager::listFilePathsDeep(const std::string& path) {
+  std::vector<std::string> filePaths;
+  std::vector<std::string> folderPaths{""};
+
+  while (!folderPaths.empty()) {
+    std::string currentBasePath = folderPaths.back();
+    folderPaths.pop_back();
+
+    FsDir dir = openFolder(path + currentBasePath, FsDirOpenMode_ReadDirs | FsDirOpenMode_ReadFiles);
+
+    std::vector<FsDirectoryEntry> entries(MAX_FS_ENTRY_LOAD);
+    s64 readCount = 0;
+    while (R_SUCCEEDED(fsDirRead(&dir, &readCount, MAX_FS_ENTRY_LOAD, entries.data())) && readCount) {
+      for (int i = 0; i < readCount; i++) {
+        FsDirectoryEntry entry = entries[i];
+        std::string nextPath = currentBasePath + "/" + entry.name;
+
+        if (entry.type == FsDirEntryType_File && entry.file_size > 0) {
+          filePaths.push_back(nextPath);
+        } else if (entry.type == FsDirEntryType_Dir) {
+          folderPaths.push_back(nextPath);
+        }
+      }
+    }
+
+    fsDirClose(&dir);
+  }
+
+  return filePaths;
+}
+
 /**
  * Gets a vector of all entity names that are directly within the specified path
  * (parsing the name from the folder name)

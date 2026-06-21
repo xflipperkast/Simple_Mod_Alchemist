@@ -38,6 +38,8 @@ namespace FsManager {
    */
   bool hasFilesDeep(const std::string& path);
 
+  std::vector<std::string> listFilePathsDeep(const std::string& path);
+
   /**
    * Gets a vector of all entity names that are directly within the specified path
    * (parsing the name from the folder name)
