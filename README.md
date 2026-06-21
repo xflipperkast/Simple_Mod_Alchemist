@@ -2,7 +2,7 @@
 
 NX-ModLoader-GX is the Fastest Nintendo Switch mod management app. Its forked well-known [SimpleModManager](https://github.com/nadrino/SimpleModManager) app with the efficient backend functionality of [Simple Mod Alchemist](https://github.com/gtiersma/state-alchemist), While Making it even more efficient on how mods are loaded with the introduction of mod packs
 
-<p align="center"><img src="./screenshots/full_size.png" width="25%"></p>
+<p align="center"><img src="./screenshots/full_sized.png" width="25%"></p>
 
 
 ## Features
