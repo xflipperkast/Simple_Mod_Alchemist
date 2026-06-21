@@ -16,8 +16,6 @@
 #include <util.hpp>
 #include <note_cell.hpp>
 
-#include <atomic>
-
 using namespace brls::literals;
 
 TabGames::TabGames() {
@@ -61,32 +59,9 @@ brls::IconCell* TabGames::buildGameCell(const Game& game) {
   item->registerClickAction([game](brls::View* view) {
     gameBrowser.selectGame(game);
 
-    // Let the user know if there's no mods:
-    // TODO: Groups are loaded only to check if they exist here. Not efficient.
-    std::vector<std::string> groups = controller.loadGroups(false);
-    if (groups.empty()) {
-      brls::Dialog* dialog = new brls::Dialog(
-        "No mod group folders exist in \"" + controller.getGamePath() +
-        "\". Within that folder, organize the mods in this manner: ./<group>/<thing-being-replaced>/<mod-name>/<mod-file-structure>"
-      );
-      dialog->addButton("OK", []() {});
-      dialog->open();
-      return true;
-    }
-
     FrameModBrowser* modsBrowser = new FrameModBrowser();
     brls::Application::pushActivity(modsBrowser);
     modsBrowser->initialize();
-    return true;
-  });
-
-  item->registerAction("Randomly Change Mods", brls::BUTTON_X, [game](brls::View* view) {
-    gameBrowser.selectGame(game);
-    Util::buildConfirmDialog(
-      "Enable/disable mods for " + game.name + " at random?",
-      "Changing mods.",
-      [](std::atomic<float>& progress) { controller.randomizeGame(progress); }
-    )->open();
     return true;
   });
 

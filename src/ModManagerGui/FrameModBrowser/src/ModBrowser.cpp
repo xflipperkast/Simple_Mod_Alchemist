@@ -4,7 +4,6 @@
 
 #include "ModBrowser.h"
 #include "FrameModBrowser.h"
-#include "RandomSettings.h"
 
 #include <StateAlchemist/controller.h>
 #include <StateAlchemist/meta_manager.h>
@@ -73,9 +72,7 @@ brls::RecyclerCell* ModDataSource::cellForRow(brls::RecyclerFrame* recycler, brl
 ModBrowser::ModBrowser(brls::View* parentCell): _parent_cell_(parentCell) {
   this->inflateFromXMLRes("xml/FrameModBrowser/mod_browser.xml");
 
-  // This is just a random number I tossed here that sounded right,
-  // and it seems to be working.
-  // TODO: Is this really the right number though?
+  // Rough row height for selector cells.
   modList->estimatedRowHeight = 70;
 
   modList->registerCell("Selector", []() { return new brls::SelectorCell(); });
@@ -136,24 +133,4 @@ void ModBrowser::configureModSelector(brls::SelectorCell* selector, ModSource& m
   });
 
   selector->updateActionHint(brls::BUTTON_A, "Change");
-
-  selector->registerAction("Random", brls::BUTTON_X, [this, &mod](brls::View* view) {
-    brls::SelectorCell* cell = dynamic_cast<brls::SelectorCell*>(view);
-
-    controller.source = mod.getSource();
-    controller.randomizeSource();
-
-    // Update new active mod in both the object and the UI:
-    int activeIndex = gameBrowser.getModManager().getActiveIndex(mod.getSource(), mod.getMods());
-    mod.setActiveIndex(activeIndex);
-    cell->setSelection(activeIndex + 1);
-
-    return true;
-  });
-
-  selector->registerAction("Random Settings", brls::BUTTON_Y, [this, mod](brls::View* view) {
-    controller.source = mod.getSource();
-    RandomSettings::showInDialog();
-    return true;
-  });
 }

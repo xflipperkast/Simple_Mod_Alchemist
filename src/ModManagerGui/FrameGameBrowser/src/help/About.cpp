@@ -90,7 +90,6 @@ brls::View* About::buildTopLeftBox() {
   brls::Label* changelog = new brls::Label();
   changelog->setText(
     " - Help info is now in the app.\n"\
-    " - Fixed the mod random settings, making it easier to use as well.\n"\
     " - Game folders are now automatically given the game's name with the title ID number.\n"\
     " - General stability improvements!\n"
   );

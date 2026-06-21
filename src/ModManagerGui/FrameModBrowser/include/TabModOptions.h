@@ -17,8 +17,6 @@ class TabModOptions : public brls::Box {
 public:
   explicit TabModOptions();
 
-  void buildRandomPicks();
-
   void buildDisableAllMods();
 
   static TabModOptions* create();

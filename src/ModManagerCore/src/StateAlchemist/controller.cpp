@@ -4,8 +4,6 @@
 #include "StateAlchemist/fs_manager.h"
 #include "StateAlchemist/meta_manager.h"
 
-#include <set>
-
 
 Controller controller;
 
@@ -63,90 +61,6 @@ std::vector<std::string> Controller::loadSources(bool sort) {
  */
 std::vector<std::string> Controller::loadMods(bool sort) {
   return FsManager::listNames(this->getSourcePath(), sort);
-}
-
-
-/*
- * Loads map of mods names to each rating
- * 
- * @requirement: group and source must be set
- */
-std::map<std::string, u8> Controller::loadRatings() {
-  std::map<std::string, u8> ratings;
-
-  FsDir dir = FsManager::openFolder(this->getSourcePath(), FsDirOpenMode_ReadDirs);
-
-  FsDirectoryEntry entry;
-  s64 readCount = 0;
-  while (R_SUCCEEDED(fsDirRead(&dir, &readCount, 1, &entry)) && readCount) {
-    if (entry.type == FsDirEntryType_Dir) {
-      std::string mod = MetaManager::parseName(entry.name);
-      ratings[mod] = MetaManager::parseRating(entry.name);
-    }
-  }
-
-  fsDirClose(&dir);
-
-  return ratings;
-}
-
-/*
- * Loads the rating for the source (for using no mod)
- * 
- * @requirement: group and source must be set
- */
-u8 Controller::loadDefaultRating() {
-  u8 rating;
-
-  FsDir dir = FsManager::openFolder(this->getGroupPath(), FsDirOpenMode_ReadDirs);
-
-  FsDirectoryEntry entry;
-  s64 readCount = 0;
-  while (R_SUCCEEDED(fsDirRead(&dir, &readCount, 1, &entry))) {
-    if (entry.type == FsDirEntryType_Dir && this->source == MetaManager::parseName(entry.name)) {
-      rating = MetaManager::parseRating(entry.name);
-      break;
-    }
-  }
-
-  fsDirClose(&dir);
-
-  return rating;
-}
-
-/*
- * Saves the ratings for each mod
- * 
- * @requirement: group and source must be set
- */
-void Controller::saveRatings(const std::map<std::string, u8>& ratings) {
-  for (const auto& [mod, rating]: ratings) {
-    std::string currentPath = this->getModPath(mod);
-    std::string newPath = this->getSourcePath() + "/" + MetaManager::buildFolderName(mod, rating);
-
-    MetaManager::tryResult(
-      fsFsRenameDirectory(
-        &FsManager::sdSystem,
-        FsManager::toPathBuffer(currentPath).get(),
-        FsManager::toPathBuffer(newPath).get()
-      )
-    );
-  }
-}
-
-/*
- * Saves the rating for using no mod for the current source
- */
-void Controller::saveDefaultRating(const u8& rating) {
-  std::string newPath = this->getGroupPath() + "/" + MetaManager::buildFolderName(this->source, rating);
-
-  MetaManager::tryResult(
-    fsFsRenameDirectory(
-      &FsManager::sdSystem,
-      FsManager::toPathBuffer(this->getSourcePath()).get(),
-      FsManager::toPathBuffer(newPath).get()
-    )
-  );
 }
 
 /**
@@ -270,108 +184,6 @@ void Controller::deactivateAll(std::atomic<float>& progress) {
 
   this->group = "";
   this->source = "";
-}
-
-/**
- * Randomly activates/deactivates all mods based upon their ratings
- *
- * @param progress Scale of 0.0-1.0 of the method's current progress.
- *                 Updated while the method runs.
- */
-void Controller::randomizeGame(std::atomic<float>& progress) {
-  std::vector<std::string> groups = this->loadGroups(false);
-
-  // Percentage completed per group
-  float progressPerGroup = 1.0f / groups.size();
-
-  for (const std::string& group : groups) {
-    this->group = group;
-    this->randomizeGroup(progress, progressPerGroup);
-  }
-
-  this->group = "";
-  this->source = "";
-}
-
-/**
- * Randomly activates/deactivates all mods in the current group
- * 
- * @requirement: group must be set
- *
- * @param progress Scale of 0.0-1.0 of the method's current progress.
- *                 Updated while the method runs.
- *
- * @param percentageOfGame If the group is being randomized as part of an entire game,
- *                         include the percentage of the total number of groups this group represents.
- *                         The method will only increase the progress by that percentage.
- *                         Otherwise, it's expected that this group is the only thing being randomized,
- *                         so the progress param is at 0% and it will move forward to 100%.
- */
-void Controller::randomizeGroup(std::atomic<float>& progress, const float& percentageOfGame) {
-  std::vector<std::string> sources = this->loadSources(false);
-
-  // Percentage completed per source
-  float progressPerSource = percentageOfGame / sources.size();
-
-  for (const std::string& source : sources) {
-    this->source = source;
-    this->randomizeSource();
-    
-    progress.store(progress.load() + progressPerSource);
-  }
-}
-
-/**
- * Randomly activates/deactivates a mod for the current source in the current group
- * 
- * @requirement: group and source must be set
- */
-void Controller::randomizeSource() {
-  
-  // Seed the random number generator with the current time
-  std::srand(static_cast<unsigned int>(std::time(nullptr)));
-
-  std::map<std::string, u8> ratings = this->loadRatings();
-  u8 defaultRating = this->loadDefaultRating();
-
-  // Sum all ratings to pick one at random:
-  u16 ratingTotal = defaultRating;
-  for (const auto& [mod, rating]: ratings) {
-    ratingTotal += rating;
-  }
-
-  // Just skip if all ratings are 0 for some reason:
-  if (ratingTotal == 0) { return; }
-
-  // Get the random number 
-  u16 randomChoice = (std::rand() % ratingTotal) + 1;
-
-  // If it's within the default option's range, deactivate it:
-  if (randomChoice <= defaultRating) {
-    this->deactivateMod();
-  } else {
-    // Otherwise, keep subtracting the ratings until we reach the one to activate:
-    randomChoice -= defaultRating;
-
-    for (const auto& [mod, rating]: ratings) {
-      if (randomChoice < rating) {
-        std::string activeMod = this->getActiveMod(this->source);
-
-        // No need to do anything if the picked mod is also the currently-active one:
-        if (activeMod == mod) { return; }
-
-        // If there's an active mod, deactivate it:
-        if (!activeMod.empty()) {
-          this->returnFiles(activeMod);
-        }
-
-        this->activateMod(mod);
-        return;
-      }
-
-      randomChoice -= rating;
-    }
-  }
 }
 
 Controller::Controller() {

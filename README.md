@@ -1,9 +1,6 @@
-![SimpleModManager x State Alchemist](./screenshots/x.jpg)
+# NX-ModLoader-GX
 
-
-# Simple Mod Alchemist
-
-Simple Mod Alchemist is the definitive Nintendo Switch mod management solution. It originated from merging the UI of the well-known [SimpleModManager](https://github.com/nadrino/SimpleModManager) app with the efficient backend functionality of the (now deprecated) [State Alchemist](https://github.com/gtiersma/state-alchemist) overlay, introducing new improvements and increased stability through the process!
+NX-ModLoader-GX is the Fastest Nintendo Switch mod management app. Its forked well-known [SimpleModManager](https://github.com/nadrino/SimpleModManager) app with the efficient backend functionality of [Simple Mod Alchemist](https://github.com/gtiersma/state-alchemist), While Making it even more efficient on how mods are loaded with the introduction of mod packs
 
 <p align="center"><img src="./screenshots/full_size.png" width="25%"></p>
 
@@ -12,14 +9,9 @@ Simple Mod Alchemist is the definitive Nintendo Switch mod management solution. 
 
 * Intuitive UI for changing mods
 * Mods are categorized in groups and by what they replace
-* Mod files are moved, not copied
-  * This makes switching between large files seemingly instant
-* Can automatically bring over mods from SimpleModManager to start using right away
+* Mod files are moved, not copied (small mods only)
+* Modpacks - switch instantly between modpacks
 * Scalable - works with lists of hundreds of mods
-* Change mods at random
-  * Set how likely each mod gets picked at random
-* More to come!
-
 
 ## Screenshots
 
@@ -139,17 +131,6 @@ If there ever is a mod you're using that you want to delete permanently, **make 
 Once you're sure it's disabled, deleting the mod is as easy as deleting the `mod_alchemy/<game_name> (<title_id>)/<group_name>/<thing_being_modded>/<mod_name>` folder belonging to it from your SD card.
 
 Disabling the mod is necessary because enabled mods have their files mixed in with all the other enabled mod files within the `/atmosphere/contents/<title_id>/` folder. Disabling the mod will move its files back to the original folder they were in: `mod_alchemy/<game_name> (<title_id>)/<group_name>/<thing_being_modded>/<mod_name>`, that way, when you delete the folder, you can be sure all files for that mod are being deleted as well.
-
-### Changing Mods at Random
-
-You can have the app pick modes for you at random.
-
-Mods can be randomly changed individually, by group, or by an entire game.
-
-To do so, highlight a game, group or individual mod and press *X*.
-
-The odds of each mod being chosen at random can also be adjusted. Highlight a mod and press **Y** to do so.
-
 
 ## Help / FAQs
 
@@ -300,23 +281,6 @@ Once there is no mod enabled in the `mod_alchemy/<game_name> (<title_id>)/<group
 3. Move all folder(s) in `mod_alchemy/<game_name> (<title_id>)/<group_name>/<thing_being_modded>/<mod_name>/` to `/atmosphere/contents/<title_id>/`.
 
 4. The next time you open Simple Mod Alchemist, it will show the mod as enabled, and the mod will be able change between other mods properly.
-
-### Likelihoods of mods being randomly picked
-
-To see what the current mod liklihood is set at (for when the mods are being picked at random), navigate to that mods folder in `mod_alchemy/<game_name> (<title_id>)/<group_name>/<thing_being_modded>/`.
-
-There may be `~~##` at the end of the folder name, where `##` could be two of any digit. That number is the likelihood on a scale from 0 to 100, with `00` being never.
-
-If there is no `~~##` at the end of the folder name, that means that mod is set to the default likelihood of `100`.
-
-The likelihood of *no* mod being picked can be found at the end of the name of the `mod_alchemy/<game_name> (<title_id>)/<group_name>/<thing_being_modded>/` folder.
-
-To change the likelihood, simply change the last two digits on the end of the folder name. But keep in mind there must be two digits after the `~~`.
-
-* `~~100` will not be interpreted correctly. If you want to set it to `100`, remove the `~~##` from the folder name entirely.
-
-* `~~5` will also not be interpreted correctly. If you want to set it to `5`, the folder name should end with two digits: `~~05`.
-
 
 # Super Advanced: Build From Source
 

@@ -4,13 +4,11 @@
     <brls:TabFrame>
 
         <brls:Tab label="Mods" >
-          <GroupBrowser/>
+          <TabHybridMods/>
         </brls:Tab>
 
-        <brls:Separator />
-
-        <brls:Tab label="Mod Options" >
-          <TabModOptions/>
+        <brls:Tab label="Modpacks" >
+          <TabHybridModpacks/>
         </brls:Tab>
 
     </brls:TabFrame>

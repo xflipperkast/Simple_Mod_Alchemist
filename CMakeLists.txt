@@ -31,7 +31,7 @@ set(VERSION_BUILD "0")
 set(PACKAGE_NAME "com.borealis.sma")
 set(PSN_TITLE_ID  "n/a")
 set(PSN_VERSION  "n/a")
-set(PROJECT_AUTHOR "nadrino and gtiersma")
+set(PROJECT_AUTHOR "Flippy & nadrino & gtiersma")
 set(PROJECT_ICON ${CMAKE_CURRENT_SOURCE_DIR}/src/Applications/SimpleModManager/resources/assets/icon_gui.jpg)
 set(PROJECT_RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/resources)
 
@@ -160,6 +160,7 @@ elseif (PLATFORM_SWITCH)
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_RESOURCES} ${CMAKE_BINARY_DIR}/resources
         COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/resources/font
         COMMAND ${NX_ELF2NRO_EXE} ${PROJECT_NAME}.elf ${PROJECT_NAME}.nro --icon=${PROJECT_ICON} --nacp=${PROJECT_NAME}.nacp --romfsdir=${CMAKE_BINARY_DIR}/resources
+        VERBATIM
     )
 elseif (PLATFORM_IOS)
     ios_bundle(

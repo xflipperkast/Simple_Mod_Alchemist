@@ -3,9 +3,7 @@
 #include <switch.h>
 
 #include <vector>
-#include <map>
 #include <string>
-#include <ctime>
 #include <atomic>
 
 class Controller {
@@ -48,28 +46,6 @@ class Controller {
     std::vector<std::string> loadMods(bool sort);
 
     /*
-     * Loads map of mods names to each rating
-     */
-    std::map<std::string, u8> loadRatings();
-
-    /*
-     * Loads the rating for the source (for using no mod)
-     * 
-     * @requirement: group and source must be set
-     */
-    u8 loadDefaultRating();
-
-    /*
-     * Saves the ratings for each mod
-     */
-    void saveRatings(const std::map<std::string, u8>& ratings);
-
-    /*
-     * Saves the rating for using no mod for the current source
-     */
-    void saveDefaultRating(const u8& rating);
-
-    /*
      * Gets the mod currently activated for the moddable source in the group
      *
      * Returns an empty string if no mod is active and vanilla files are being used
@@ -91,37 +67,6 @@ class Controller {
      *                 Updated while the method runs.
      */
     void deactivateAll(std::atomic<float>& progress);
-
-    /**
-     * Randomly activates/deactivates all mods in the current game based upon their ratings
-     *
-     * @param progress Scale of 0.0-1.0 of the method's current progress.
-     *                 Updated while the method runs.
-     */
-    void randomizeGame(std::atomic<float>& progress);
-
-    /**
-     * Randomly activates/deactivates all mods in the current group
-     * 
-     * @requirement: group must be set
-     *
-     * @param progress Scale of 0.0-1.0 of the method's current progress.
-     *                 Updated while the method runs.
-     *
-     * @param percentageOfGame If the group is being randomized as part of an entire game,
-     *                         include the percentage of the total number of groups this group represents.
-     *                         The method will only increase the progress by that percentage.
-     *                         Otherwise, it's expected that this group is the only thing being randomized,
-     *                         so the progress param is at 0% and it will move forward to 100%.
-     */
-    void randomizeGroup(std::atomic<float>& progress, const float& percentageOfGame = 1.0f);
-
-    /**
-     * Randomly activates/deactivates a mod for the current source in the current group
-     * 
-     * @requirement: group and source must be set
-     */
-    void randomizeSource();
 
     /**
      * Gets Mod Alchemist's game directory:

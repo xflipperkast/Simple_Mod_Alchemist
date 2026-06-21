@@ -4,7 +4,7 @@
 #include "borealis.hpp"
 
 /**
- * Just random UI shared functionality that needs to be performed often in many different places
+ * Shared UI functionality used in many different places.
  */
 namespace Util {
 

@@ -11,6 +11,7 @@
 #include <help/TabHelp.h>
 #include <GroupBrowser.h>
 #include <TabModOptions.h>
+#include <TabHybridMods.h>
 
 #include <icon_applet.hpp>
 #include <note_cell.hpp>
@@ -42,14 +43,13 @@ int main(int argc, char* argv[])
     brls::Application::registerXMLView("TabHelp", TabHelp::create);
     brls::Application::registerXMLView("GroupBrowser", GroupBrowser::create);
     brls::Application::registerXMLView("TabModOptions", TabModOptions::create);
+    brls::Application::registerXMLView("TabHybridMods", TabHybridMods::createMods);
+    brls::Application::registerXMLView("TabHybridModpacks", TabHybridMods::createModpacks);
 
     brls::Application::registerXMLView("brls:IconApplet", brls::IconApplet::create);
     brls::Application::registerXMLView("brls:NoteCell", brls::NoteCell::create);
 
     nsInitialize();
-
-    // Create the app's folder in the SD Root if not yet created:
-    FsManager::createFolderIfNeeded(ALCHEMIST_PATH);
 
     gameBrowser.loadGames();
 

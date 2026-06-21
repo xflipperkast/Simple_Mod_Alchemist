@@ -30,7 +30,7 @@ void LoadingDialog::open() {
 }
 
 void LoadingDialog::setAction(const std::string& action) {
-  this->label->setText(action + " Please wait...");
+  this->label->setText(action.find("wait") == std::string::npos ? action + " Please wait..." : action);
 }
 
 void LoadingDialog::setProgress(float progress) {

@@ -4,7 +4,6 @@
 
 #include "GroupBrowser.h"
 #include "ModBrowser.h"
-#include "util.hpp"
 
 #include <StateAlchemist/controller.h>
 
@@ -40,18 +39,6 @@ GroupBrowser::GroupBrowser() {
       this->addView(this->_current_mod_browser_);
     });
   }
-
-  this->groupList->registerAction("Randomly Change Mods", brls::BUTTON_X, [this](brls::View* view) {
-    Util::buildConfirmDialog(
-      "Enable/disable all mods in \"" + controller.group + "\" at random?",
-      "Changing mods in \"" + controller.group + "\".",
-      [this](std::atomic<float>& progress) {
-        controller.randomizeGroup(progress);
-        this->_current_mod_browser_->refreshSelections();
-      }
-    )->open();
-    return true;
-  });
 }
 
 GroupBrowser* GroupBrowser::create() {
