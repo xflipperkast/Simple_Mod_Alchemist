@@ -16,6 +16,7 @@ using json = nlohmann::json;
 
 namespace {
   const std::vector<std::string> LAYERS = {"romfs", "exefs"};
+  const fs::path LOG_PATH = "/switch/Simple_Mod_alchemist/error.log";
 
   fs::path sdPath(const std::string& value) {
     if (value.rfind("sd:/", 0) == 0) return fs::path("/") / value.substr(4);
@@ -23,13 +24,36 @@ namespace {
     return fs::path("/") / value;
   }
 
+  void logLine(const std::string& line) {
+    try {
+      fs::create_directories(LOG_PATH.parent_path());
+      std::ofstream out(LOG_PATH, std::ios::app);
+      out << line << '\n';
+    } catch (...) {
+    }
+  }
+
+  void logStep(const char* step, u64 titleId, const std::string& detail) {
+    logLine(std::string(step) + " title_id=" + HybridModManager::titleIdString(titleId) + " " + detail);
+  }
+
+  void moveFile(const fs::path& source, const fs::path& target) {
+    fs::create_directories(target.parent_path());
+    if (fs::exists(target)) fs::remove(target);
+    fs::rename(source, target);
+  }
+
   json loadConfig() {
-    if (!fs::exists(HybridModManager::CONFIG_PATH)) return json{{"games", json::object()}};
+    if (!fs::exists(HybridModManager::CONFIG_PATH)) {
+      logLine("config load: missing " + HybridModManager::CONFIG_PATH + ", using empty config");
+      return json{{"games", json::object()}};
+    }
     json cfg;
     try {
       std::ifstream in(HybridModManager::CONFIG_PATH);
       in >> cfg;
     } catch (...) {
+      logLine("config load: failed to parse " + HybridModManager::CONFIG_PATH + ", using empty config");
       cfg = json{{"games", json::object()}};
     }
     if (!cfg.contains("games") || !cfg["games"].is_object()) cfg["games"] = json::object();
@@ -39,6 +63,7 @@ namespace {
   void saveConfig(const json& cfg) {
     fs::create_directories(fs::path(HybridModManager::CONFIG_PATH).parent_path());
     std::ofstream(HybridModManager::CONFIG_PATH) << cfg.dump(2) << '\n';
+    logLine("config save: " + HybridModManager::CONFIG_PATH);
   }
 
   bool startsWith(const std::string& value, const std::string& prefix) {
@@ -87,6 +112,7 @@ namespace {
   }
 
   json syncConfig(u64 titleId) {
+    logStep("syncConfig:start", titleId, "root=" + modsRoot(titleId).string());
     auto cfg = loadConfig();
     auto key = HybridModManager::titleIdString(titleId);
     auto root = modsRoot(titleId);
@@ -109,6 +135,7 @@ namespace {
       if (entry.is_directory()) addFolder(entry.path().filename().string());
     }
     auto contents = sdPath("atmosphere/contents") / key;
+    logStep("syncConfig:scan", titleId, "contents=" + contents.string() + " root_folders=" + std::to_string(folders.size()));
     if (fs::is_directory(contents)) {
       for (const auto& entry : fs::directory_iterator(contents)) {
         if (!entry.is_directory()) continue;
@@ -163,9 +190,11 @@ namespace {
       mod.erase("folder_name");
       mod.erase("storage_path");
       game["mods"].push_back(mod);
+      logStep("syncConfig:mod", titleId, "folder=" + folder + " id=" + mod["id"].get<std::string>() + " pack=" + std::string(isPack ? "true" : "false") + " enabled=" + std::string(mod["is_enabled"].get<bool>() ? "true" : "false"));
     }
     game["active_modpack_folder"] = active;
     game.erase("active_modpack");
+    logStep("syncConfig:done", titleId, "active=" + active + " mods=" + std::to_string(game["mods"].size()));
     saveConfig(cfg);
     return cfg;
   }
@@ -174,46 +203,96 @@ namespace {
     return cfg["games"][HybridModManager::titleIdString(titleId)];
   }
 
-  std::vector<fs::path> enabledSingleRoots(json& game, u64 titleId) {
-    std::vector<fs::path> paths;
-    for (auto& mod : game["mods"]) {
-      if (!mod.value("is_modpack", false) && mod.value("is_enabled", false)) {
-        paths.push_back(modsRoot(titleId) / modFolder(mod));
-      }
-    }
-    return paths;
+  fs::path singleRoot(u64 titleId, const json& mod) {
+    return modsRoot(titleId) / modFolder(mod);
   }
 
-  void removeSingleFiles(const fs::path& contents, const std::vector<fs::path>& singleRoots) {
+  std::vector<json*> enabledSingleMods(json& game) {
+    std::vector<json*> mods;
+    for (auto& mod : game["mods"]) {
+      if (!mod.value("is_modpack", false) && mod.value("is_enabled", false)) {
+        mods.push_back(&mod);
+      }
+    }
+    return mods;
+  }
+
+  bool safeRelativePath(const fs::path& path) {
+    if (path.is_absolute()) return false;
+    return std::none_of(path.begin(), path.end(), [](const fs::path& part) { return part == ".."; });
+  }
+
+  std::vector<fs::path> sourceFiles(const fs::path& root) {
+    std::vector<fs::path> files;
+    for (const auto& layer : layersIn(root)) {
+      auto source = root / layer;
+      for (const auto& entry : fs::recursive_directory_iterator(source)) {
+        if (entry.is_regular_file()) files.push_back(fs::path(layer) / fs::relative(entry.path(), source));
+      }
+    }
+    return files;
+  }
+
+  std::vector<fs::path> movedFiles(const json& mod) {
+    std::vector<fs::path> files;
+    if (!mod.contains("enabled_files") || !mod["enabled_files"].is_array()) return files;
+    for (const auto& value : mod["enabled_files"]) {
+      if (!value.is_string()) continue;
+      fs::path file(value.get<std::string>());
+      if (safeRelativePath(file)) files.push_back(file);
+    }
+    return files;
+  }
+
+  void pruneEmptyLayers(const fs::path& contents) {
+    for (const auto& layer : LAYERS) {
+      auto root = contents / layer;
+      if (!fs::exists(root)) continue;
+      std::vector<fs::path> dirs;
+      for (const auto& entry : fs::recursive_directory_iterator(root)) {
+        if (entry.is_directory()) dirs.push_back(entry.path());
+      }
+      for (auto it = dirs.rbegin(); it != dirs.rend(); ++it) {
+        if (fs::exists(*it) && fs::is_empty(*it)) fs::remove(*it);
+      }
+      if (fs::exists(root) && fs::is_empty(root)) fs::remove(root);
+    }
+  }
+
+  void removeSingleFiles(const fs::path& contents, const std::vector<json*>& singleMods, u64 titleId) {
+    logLine("removeSingleFiles: contents=" + contents.string() + " mods=" + std::to_string(singleMods.size()));
     std::vector<fs::path> dirs;
-    for (const auto& root : singleRoots) {
-      for (const auto& layer : layersIn(root)) {
-        auto source = root / layer;
-        for (const auto& entry : fs::recursive_directory_iterator(source)) {
-          auto target = contents / layer / fs::relative(entry.path(), source);
-          if (entry.is_regular_file()) {
-            fs::remove(target);
-            auto backup = target;
-            backup += ".bak";
-            if (fs::exists(backup)) fs::rename(backup, target);
-          }
-          if (entry.is_directory()) dirs.push_back(target);
+    for (auto* mod : singleMods) {
+      auto root = singleRoot(titleId, *mod);
+      auto files = movedFiles(*mod);
+      if (files.empty()) files = sourceFiles(root);
+      for (const auto& file : files) {
+        auto target = contents / file;
+        auto source = root / file;
+        if (fs::exists(target)) {
+          logLine("removeSingleFiles: move " + target.string() + " -> " + source.string());
+          moveFile(target, source);
+          dirs.push_back(target.parent_path());
+        }
+        auto backup = target;
+        backup += ".bak";
+        if (fs::exists(backup)) {
+          logLine("removeSingleFiles: restore " + backup.string() + " -> " + target.string());
+          fs::rename(backup, target);
         }
       }
+      (*mod)["enabled_files"] = json::array();
     }
     for (auto it = dirs.rbegin(); it != dirs.rend(); ++it) {
       if (fs::exists(*it) && fs::is_empty(*it)) fs::remove(*it);
     }
+    pruneEmptyLayers(contents);
   }
 
-  int countFiles(const std::vector<fs::path>& singleRoots) {
+  int countFiles(const std::vector<json*>& singleMods, u64 titleId) {
     int count = 0;
-    for (const auto& root : singleRoots) {
-      for (const auto& layer : layersIn(root)) {
-        for (const auto& entry : fs::recursive_directory_iterator(root / layer)) {
-          if (entry.is_regular_file()) count++;
-        }
-      }
+    for (const auto* mod : singleMods) {
+      count += sourceFiles(singleRoot(titleId, *mod)).size();
     }
     return count;
   }
@@ -224,14 +303,22 @@ namespace {
 
   void ensureLayerStaged(const fs::path& contents, const fs::path& packRoot, const std::string& pack, const std::string& layer) {
     auto staged = stagedLayer(contents, layer, pack);
-    if (fs::exists(staged)) return;
+    if (fs::exists(staged)) {
+      logLine("ensureLayerStaged: already staged " + staged.string());
+      return;
+    }
     if (!fs::exists(packRoot / layer)) throw std::runtime_error("Selected modpack layer is missing.");
+    logLine("ensureLayerStaged: copy " + (packRoot / layer).string() + " -> " + staged.string());
     fs::copy(packRoot / layer, staged, fs::copy_options::recursive);
   }
 
   void activateLayer(const fs::path& contents, const std::string& layer, const std::string& pack) {
     auto live = contents / layer;
-    if (!fs::exists(live)) fs::rename(stagedLayer(contents, layer, pack), live);
+    if (!fs::exists(live)) {
+      auto staged = stagedLayer(contents, layer, pack);
+      logLine("activateLayer: rename " + staged.string() + " -> " + live.string());
+      fs::rename(staged, live);
+    }
   }
 
   void detachCurrentPack(const fs::path& contents, const std::string& currentPack) {
@@ -246,31 +333,33 @@ namespace {
       if (!fs::exists(live)) continue;
       auto staged = stagedLayer(contents, layer, currentPack);
       if (fs::exists(staged)) throw std::runtime_error("Current modpack staging folder already exists.");
+      logLine("detachCurrentPack: rename " + live.string() + " -> " + staged.string());
       fs::rename(live, staged);
     }
   }
 
-  void copySingles(const fs::path& contents, const std::vector<fs::path>& singleRoots, std::atomic<float>& progress) {
+  void moveSingles(const fs::path& contents, const std::vector<json*>& singleMods, u64 titleId, std::atomic<float>& progress) {
     int done = 0;
-    int total = countFiles(singleRoots);
-    for (const auto& root : singleRoots) {
-      for (const auto& layer : layersIn(root)) {
-        auto source = root / layer;
-        for (const auto& entry : fs::recursive_directory_iterator(source)) {
-          auto target = contents / layer / fs::relative(entry.path(), source);
-          if (entry.is_directory()) {
-            fs::create_directories(target);
-            continue;
+    int total = countFiles(singleMods, titleId);
+    logLine("moveSingles: mods=" + std::to_string(singleMods.size()) + " files=" + std::to_string(total) + " contents=" + contents.string());
+    for (auto* mod : singleMods) {
+      auto root = singleRoot(titleId, *mod);
+      (*mod)["enabled_files"] = json::array();
+      for (const auto& file : sourceFiles(root)) {
+        auto source = root / file;
+        auto target = contents / file;
+        if (fs::exists(target)) {
+          auto backup = target;
+          backup += ".bak";
+          if (!fs::exists(backup)) {
+            logLine("moveSingles: backup " + target.string() + " -> " + backup.string());
+            moveFile(target, backup);
           }
-          fs::create_directories(target.parent_path());
-          if (fs::exists(target)) {
-            auto backup = target;
-            backup += ".bak";
-            if (!fs::exists(backup)) fs::copy_file(target, backup);
-          }
-          fs::copy_file(entry.path(), target, fs::copy_options::overwrite_existing);
-          progress.store(total == 0 ? 1.0f : static_cast<float>(++done) / total);
         }
+        logLine("moveSingles: move " + source.string() + " -> " + target.string());
+        moveFile(source, target);
+        (*mod)["enabled_files"].push_back(file.generic_string());
+        progress.store(total == 0 ? 1.0f : static_cast<float>(++done) / total);
       }
     }
   }
@@ -307,6 +396,7 @@ std::vector<HybridModSummary> HybridModManager::loadMods(u64 titleId) {
 }
 
 void HybridModManager::applyModpack(u64 titleId, const std::string& modId, std::atomic<float>& progress) {
+  logStep("applyModpack:start", titleId, "mod_id=" + modId);
   auto cfg = syncConfig(titleId);
   auto& game = gameConfig(cfg, titleId);
   auto& mods = game["mods"];
@@ -320,13 +410,14 @@ void HybridModManager::applyModpack(u64 titleId, const std::string& modId, std::
   auto targetPack = selected->value("root_folder", "");
   if (targetPack.empty()) throw std::runtime_error("Selected modpack has no root_folder.");
 
-  auto singles = enabledSingleRoots(game, titleId);
+  auto singles = enabledSingleMods(game);
   auto targetRoot = sourceRoot / targetPack;
   auto targetLayers = packLayers(targetRoot, contents, targetPack);
+  logStep("applyModpack:plan", titleId, "current=" + currentPack + " target=" + targetPack + " singles=" + std::to_string(singles.size()) + " layers=" + std::to_string(targetLayers.size()));
   if (targetLayers.empty()) throw std::runtime_error("Selected modpack has no romfs/exefs folder.");
 
   fs::create_directories(contents);
-  removeSingleFiles(contents, singles);
+  removeSingleFiles(contents, singles, titleId);
 
   bool switching = currentPack != targetPack;
   if (switching) {
@@ -339,7 +430,7 @@ void HybridModManager::applyModpack(u64 titleId, const std::string& modId, std::
   }
   for (const auto& layer : targetLayers) activateLayer(contents, layer, targetPack);
 
-  copySingles(contents, singles, progress);
+  moveSingles(contents, singles, titleId, progress);
 
   game["active_modpack_folder"] = targetPack;
   for (auto& mod : mods) {
@@ -349,9 +440,11 @@ void HybridModManager::applyModpack(u64 titleId, const std::string& modId, std::
   }
   saveConfig(cfg);
   progress.store(1.0f);
+  logStep("applyModpack:done", titleId, "mod_id=" + modId);
 }
 
 void HybridModManager::setSingleModEnabled(u64 titleId, const std::string& modId, bool enabled, std::atomic<float>& progress) {
+  logStep("setSingleModEnabled:start", titleId, "mod_id=" + modId + " enabled=" + std::string(enabled ? "true" : "false"));
   auto cfg = syncConfig(titleId);
   auto& game = gameConfig(cfg, titleId);
   auto& mods = game["mods"];
@@ -359,22 +452,23 @@ void HybridModManager::setSingleModEnabled(u64 titleId, const std::string& modId
   if (selected == mods.end()) throw std::runtime_error("Selected mod was not found.");
 
   auto contents = sdPath("atmosphere/contents") / titleIdString(titleId);
-  auto root = modsRoot(titleId) / selected->value("root_folder", "");
-  std::vector<fs::path> single{root};
+  std::vector<json*> single{&(*selected)};
   fs::create_directories(contents);
 
   if (enabled) {
-    copySingles(contents, single, progress);
+    moveSingles(contents, single, titleId, progress);
   } else {
-    removeSingleFiles(contents, single);
+    removeSingleFiles(contents, single, titleId);
   }
 
   (*selected)["is_enabled"] = enabled;
   saveConfig(cfg);
   progress.store(1.0f);
+  logStep("setSingleModEnabled:done", titleId, "mod_id=" + modId + " enabled=" + std::string(enabled ? "true" : "false"));
 }
 
 void HybridModManager::disableActiveModpack(u64 titleId, std::atomic<float>& progress) {
+  logStep("disableActiveModpack:start", titleId, "");
   auto cfg = syncConfig(titleId);
   auto& game = gameConfig(cfg, titleId);
   auto& mods = game["mods"];
@@ -382,9 +476,10 @@ void HybridModManager::disableActiveModpack(u64 titleId, std::atomic<float>& pro
   if (currentPack.empty()) return;
 
   auto contents = sdPath("atmosphere/contents") / titleIdString(titleId);
-  auto singles = enabledSingleRoots(game, titleId);
-  removeSingleFiles(contents, singles);
+  auto singles = enabledSingleMods(game);
+  removeSingleFiles(contents, singles, titleId);
   detachCurrentPack(contents, currentPack);
+  moveSingles(contents, singles, titleId, progress);
 
   game["active_modpack_folder"] = "";
   for (auto& mod : mods) {
@@ -392,4 +487,5 @@ void HybridModManager::disableActiveModpack(u64 titleId, std::atomic<float>& pro
   }
   saveConfig(cfg);
   progress.store(1.0f);
+  logStep("disableActiveModpack:done", titleId, "current=" + currentPack);
 }

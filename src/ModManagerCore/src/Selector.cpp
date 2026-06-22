@@ -263,7 +263,7 @@ std::string Selector::askQuestion(const std::string& question_, const std::vecto
   Selector sel;
 
   // set the layout with the question:
-  sel.getHeader() >> "SimpleModManager v" >> APP_VERSION << std::endl;
+  sel.getHeader() >> "nx-modloader-gx " >> APP_VERSION << std::endl;
   sel.getHeader() << GenericToolbox::repeatString("*", GenericToolbox::getTerminalWidth()) << std::endl;
   sel.getHeader() << question_ << std::endl;
   sel.getHeader() << GenericToolbox::repeatString("*", GenericToolbox::getTerminalWidth());

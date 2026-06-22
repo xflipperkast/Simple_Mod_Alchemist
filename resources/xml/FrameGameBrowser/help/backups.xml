@@ -14,7 +14,7 @@
 
     <brls:Label
         width="100%"
-        text="It is highly recommended to backup the mods. It should be rare that any mod files get disorganized, but there's no guarantee it won't happen. If something ever begins to not work right in Simple Mod Alchemist or it begins crashing at some point, you can try restoring a backup if you have one."
+        text="It is highly recommended to backup the mods. It should be rare that any mod files get disorganized, but there's no guarantee it won't happen. If something ever begins to not work right in nx-modloader-gx or it begins crashing at some point, you can try restoring a backup if you have one."
         marginBottom="30px"
     />
 
@@ -81,7 +81,7 @@
         paddingLeft="20px">
         <brls:Label
             width="100%"
-            text="- Any time mods are added for Simple Mod Alchemist, the backup will need to be updated with those new files."
+            text="- Any time mods are added for nx-modloader-gx, the backup will need to be updated with those new files."
             marginBottom="30px"
         />
         <brls:Label
@@ -187,7 +187,7 @@
         paddingLeft="20px">
         <brls:Label
             width="100%"
-            text="- Any time mods are added to Simple Mod Alchemist, the backup will need to be updated with those new files."
+            text="- Any time mods are added to nx-modloader-gx, the backup will need to be updated with those new files."
             marginBottom="30px"
         />
         <brls:Label

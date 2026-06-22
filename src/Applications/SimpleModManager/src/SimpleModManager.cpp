@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
     brls::Platform::APP_LOCALE_DEFAULT = brls::LOCALE_AUTO;
 
     brls::Application::init();
-    brls::Application::createWindow("Simple Mod Alchemist");
+    brls::Application::createWindow("nx-modloader-gx");
     brls::Application::getPlatform()->setThemeVariant(brls::ThemeVariant::DARK);
 
     // Register custom views (including tabs, which are views)
@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
 
     mainActivity->registerExitAction(brls::BUTTON_B);
     brls::AppletFrame* appFrame = (brls::AppletFrame*)mainActivity->getContentView();
-    appFrame->setTitle("Simple Mod Alchemist (v" + APP_VERSION + ")");
+    appFrame->setTitle("nx-modloader-gx " + APP_VERSION);
 
     // Set the tab width to a low percentage mainly for the Help tab since that could use the space:
     brls::TabFrame* tabs = (brls::TabFrame*)appFrame->getContentView();

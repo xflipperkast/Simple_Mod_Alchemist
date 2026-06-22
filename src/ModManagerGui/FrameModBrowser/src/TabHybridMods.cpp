@@ -17,6 +17,8 @@
 #include <thread>
 
 namespace {
+  const char* LOG_PATH = "/switch/Simple_Mod_alchemist/error.log";
+
   const char* emptyText(bool showModpacks) {
     return showModpacks ? "No modpacks found" : "No mods found";
   }
@@ -39,16 +41,25 @@ namespace {
     return enabled ? "disable_mod" : "enable_mod";
   }
 
-  void logApplyError(const char* action, u64 titleId, const std::string& id, const std::string& error) {
+  void logUiStep(const std::string& line) {
     try {
       std::filesystem::create_directories("/switch/Simple_Mod_alchemist");
-      std::ofstream out("/switch/Simple_Mod_alchemist/error.log", std::ios::app);
-      out << "action=" << action
-          << " title_id=" << HybridModManager::titleIdString(titleId)
-          << " mod_id=" << id
-          << " error=" << error << '\n';
+      std::ofstream out(LOG_PATH, std::ios::app);
+      out << line << '\n';
     } catch (...) {
     }
+  }
+
+  void resetUiLog() {
+    try {
+      std::filesystem::create_directories("/switch/Simple_Mod_alchemist");
+      std::ofstream(LOG_PATH, std::ios::trunc);
+    } catch (...) {
+    }
+  }
+
+  void logApplyError(const char* action, u64 titleId, const std::string& id, const std::string& error) {
+    logUiStep("ui action=" + std::string(action) + " title_id=" + HybridModManager::titleIdString(titleId) + " mod_id=" + id + " error=" + error);
   }
 }
 
@@ -81,30 +92,38 @@ void TabHybridMods::reload() {
     cell->setDetailText(mod.isEnabled ? "Enabled" : "Disabled");
     cell->setDetailTextColor(brls::Application::getTheme()[mod.isEnabled ? "brls/list/listItem_value_color" : "brls/text_disabled"]);
     cell->registerClickAction([this, id = mod.id, isModpack = mod.isModpack, enabled = mod.isEnabled](brls::View*) {
+      resetUiLog();
+      logUiStep("ui reset log title_id=" + HybridModManager::titleIdString(controller.titleId));
+      logUiStep("ui click begin title_id=" + HybridModManager::titleIdString(controller.titleId) + " mod_id=" + id + " pack=" + std::string(isModpack ? "true" : "false") + " enabled=" + std::string(enabled ? "true" : "false"));
       auto* loading = LoadingDialog::build();
+      logUiStep("ui loading built title_id=" + HybridModManager::titleIdString(controller.titleId));
       loading->setAction("Applying mods, please wait...");
+      logUiStep("ui loading action set title_id=" + HybridModManager::titleIdString(controller.titleId));
       loading->open();
-
-      std::thread([this, loading, id, isModpack, enabled]() {
-        std::string error;
-        auto action = actionName(isModpack, enabled);
-        try {
-          if (isModpack && enabled) HybridModManager::disableActiveModpack(controller.titleId, loading->getAtomicProgress());
-          else if (isModpack) HybridModManager::applyModpack(controller.titleId, id, loading->getAtomicProgress());
-          else HybridModManager::setSingleModEnabled(controller.titleId, id, !enabled, loading->getAtomicProgress());
-        } catch (const std::exception& e) {
-          error = e.what();
-          logApplyError(action, controller.titleId, id, error);
-        }
-        brls::sync([this, loading, error]() {
-          loading->close([this, error]() {
-            if (!error.empty()) brls::Application::notify("Apply failed: " + error);
-            brls::Application::giveFocus(nullptr);
-            this->reload();
-            brls::Application::giveFocus(this->getDefaultFocus());
-          });
-        });
-      }).detach();
+      logUiStep("ui loading open returned title_id=" + HybridModManager::titleIdString(controller.titleId));
+      std::string error;
+      auto action = actionName(isModpack, enabled);
+      logUiStep("ui sync action begin title_id=" + HybridModManager::titleIdString(controller.titleId) + " action=" + action + " mod_id=" + id);
+      try {
+        if (isModpack && enabled) HybridModManager::disableActiveModpack(controller.titleId, loading->getAtomicProgress());
+        else if (isModpack) HybridModManager::applyModpack(controller.titleId, id, loading->getAtomicProgress());
+        else HybridModManager::setSingleModEnabled(controller.titleId, id, !enabled, loading->getAtomicProgress());
+      } catch (const std::exception& e) {
+        error = e.what();
+        logApplyError(action, controller.titleId, id, error);
+      }
+      logUiStep("ui sync action end title_id=" + HybridModManager::titleIdString(controller.titleId) + " action=" + action + " mod_id=" + id + " error=" + (error.empty() ? "none" : error));
+      auto finish = [this, error]() {
+        logUiStep("ui finish start title_id=" + HybridModManager::titleIdString(controller.titleId) + " error=" + (error.empty() ? "none" : error));
+        if (!error.empty()) brls::Application::notify("Apply failed: " + error);
+        this->reload();
+        brls::Application::giveFocus(this->getDefaultFocus());
+        logUiStep("ui finish end title_id=" + HybridModManager::titleIdString(controller.titleId));
+      };
+      logUiStep("ui close request title_id=" + HybridModManager::titleIdString(controller.titleId));
+      loading->close(finish);
+      logUiStep("ui close returned title_id=" + HybridModManager::titleIdString(controller.titleId));
+      logUiStep("ui click end title_id=" + HybridModManager::titleIdString(controller.titleId) + " mod_id=" + id);
       return true;
     });
     cell->updateActionHint(brls::BUTTON_A, mod.isEnabled ? "Disable" : (mod.isModpack ? "Apply" : "Enable"));

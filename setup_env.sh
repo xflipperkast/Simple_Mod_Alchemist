@@ -12,6 +12,10 @@ function setup_devkitpro()
     export PATH=${DEVKITPRO}/tools/bin:$PATH
     export PATH=${DEVKITA64}/bin/:$PATH
 
+    if [ -f "${DEVKITPRO}/switchvars.sh" ]; then
+        source "${DEVKITPRO}/switchvars.sh"
+    fi
+
     return;
 }; export -f setup_devkitpro
 

@@ -185,11 +185,13 @@ void DismissDialog::addButton(std::string label, VoidEvent::Callback cb)
 
 void DismissDialog::open()
 {
+    brls::Logger::debug("DismissDialog::open");
     Application::pushActivity(new Activity(this));
 }
 
 void DismissDialog::close(std::function<void(void)> cb)
 {
+    brls::Logger::debug("DismissDialog::close");
     Box::dismiss(cb);
 }
 
@@ -239,6 +241,7 @@ void DismissDialog::rebuildButtons()
 
 void DismissDialog::buttonClick(DialogButton* button)
 {
+    brls::Logger::debug("DismissDialog::buttonClick");
     dismiss([button] {
         button->cb();
     });

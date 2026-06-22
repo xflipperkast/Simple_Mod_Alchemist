@@ -14,13 +14,13 @@
 
     <brls:Label
         width="100%"
-        text="By understanding how Simple Mod Alchemist interacts with files and folders on the SD card, you can change the app's mods from any file explorer and maybe a text editor. This means it's also possible to create a script for PC to automatically change/add/remove the app's mods as well."
+        text="By understanding how nx-modloader-gx interacts with files and folders on the SD card, you can change the app's mods from any file explorer and maybe a text editor. This means it's also possible to create a script for PC to automatically change/add/remove the app's mods as well."
         marginBottom="30px"
     />
 
     <brls:Label
         width="100%"
-        text="If doing anything manually as described here, be careful and don't make mistakes. If anything isn't named perfectly, it could brake how Simple Mod Alchemist manages mods, even causing it to crash."
+        text="If doing anything manually as described here, be careful and don't make mistakes. If anything isn't named perfectly, it could brake how nx-modloader-gx manages mods, even causing it to crash."
         marginBottom="80px"
     />
 
@@ -72,7 +72,7 @@
         />
         <brls:Label
             width="100%"
-            text="3. The next time you open Simple Mod Alchemist, it won't show the mod as being enabled, and the mod will be able change between other mods properly."
+            text="3. The next time you open nx-modloader-gx, it won't show the mod as being enabled, and the mod will be able change between other mods properly."
             marginBottom="50px"
         />
     </brls:Box>
@@ -105,7 +105,7 @@
         />
         <brls:Label
             width="100%"
-            text="4. The next time you open Simple Mod Alchemist, it will show the mod as enabled, and the mod will be able change between other mods properly."
+            text="4. The next time you open nx-modloader-gx, it will show the mod as enabled, and the mod will be able change between other mods properly."
         />
     </brls:Box>
 

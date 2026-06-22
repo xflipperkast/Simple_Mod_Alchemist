@@ -31,7 +31,7 @@
 
     <brls:Label
         width="100%"
-        text="If there ever is a mod that you want to delete permanently, make sure that mod is NOT active in Simple Mod Alchemist first. If it is active, change the mod so it's not. This will make sure all files for that mod are returned to their original locations within the mod's folder under `mod_alchemy`."
+        text="If there ever is a mod that you want to delete permanently, make sure that mod is NOT active in nx-modloader-gx first. If it is active, change the mod so it's not. This will make sure all files for that mod are returned to their original locations within the mod's folder under `mod_alchemy`."
         marginBottom="30px"
     />
 

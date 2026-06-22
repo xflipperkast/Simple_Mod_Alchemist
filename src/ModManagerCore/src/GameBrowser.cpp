@@ -87,10 +87,6 @@ void GameBrowser::loadGames() {
 
   std::set<u64> titleIds;
   
-  if (FsManager::doesFolderExist(ALCHEMIST_PATH)) {
-    for (auto& folder : GenericToolbox::lsDirs(ALCHEMIST_PATH)) addTitleId(titleIds, folder);
-  }
-
   if (fs::is_directory(HYBRID_MODS_PATH)) {
     for (const auto& entry : fs::directory_iterator(HYBRID_MODS_PATH)) {
       if (entry.is_directory()) addTitleId(titleIds, entry.path().filename().string());

@@ -15,7 +15,7 @@ About::About(): brls::Box(brls::Axis::COLUMN) {
   // Subtitle
   brls::Label* shortDescription = new brls::Label();
   shortDescription->setText(
-    "Simple Mod Alchemist is a Nintendo Switch homebrew app for changing game mods.\n"\
+    "nx-modloader-gx is a Nintendo Switch homebrew app for changing game mods.\n"\
     "It's the fusion of two other modding apps: SimpleModManager and State Alchemist.\n"
   );
   shortDescription->setMarginTop(10.0);
@@ -66,9 +66,9 @@ About::About(): brls::Box(brls::Axis::COLUMN) {
 
   brls::Label* copyright = new brls::Label();
   copyright->setText(
-    "Simple Mod Alchemist is licensed under GPL-v3.0\n" \
+    "nx-modloader-gx is licensed under GPL-v3.0\n" \
         "\u00A9 SimpleModManager 2019 - 2023 Nadrino\n"\
-        "\u00A9 Simple Mod Alchemist 2025 - 2026 gtiersma"
+        "\u00A9 nx-modloader-gx 2025 - 2026 gtiersma"
   );
   copyright->setFontSize(12.0f);
   copyright->setMarginBottom(30.0);

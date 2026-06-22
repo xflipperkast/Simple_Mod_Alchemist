@@ -118,7 +118,7 @@
 
     <brls:Label
         width="100%"
-        text="If the file is still located within '/atmosphere/contents/[-GAME-TITLE-ID-]/' even after disabling all mods through the app, then that file does not belong to any of the mods in Simple Mod Alchemist. It was put there manually, so you will need to figure out why it's there and if you need it."
+        text="If the file is still located within '/atmosphere/contents/[-GAME-TITLE-ID-]/' even after disabling all mods through the app, then that file does not belong to any of the mods in nx-modloader-gx. It was put there manually, so you will need to figure out why it's there and if you need it."
         marginBottom="30px"
     />
 
@@ -130,7 +130,7 @@
 
     <brls:Label
         width="100%"
-        text="If there was no conflict to begin with, it could be from an infrequent bug that causes specific files to not be moved. This particular problem seems to be outside the Simple Mod Alchemist code, so there may be nothing that can be done about it at the moment, but it's infrequent, so it shouldn't happen often. But even if this bug occurs, the rest of the files should still be moving properly when enabling or disabling the mod, so there should be no need to worry about lost files."
+        text="If there was no conflict to begin with, it could be from an infrequent bug that causes specific files to not be moved. This particular problem seems to be outside the nx-modloader-gx code, so there may be nothing that can be done about it at the moment, but it's infrequent, so it shouldn't happen often. But even if this bug occurs, the rest of the files should still be moving properly when enabling or disabling the mod, so there should be no need to worry about lost files."
     />
 
     <brls:Box
@@ -279,7 +279,7 @@
 
     <brls:Label
         width="100%"
-        text="Only after doing so, delete the 'mod_alchemy' folder from the root of your SD card, along with the Simple Mod Alchemist app file from the 'switch' directory."
+        text="Only after doing so, delete the 'mod_alchemy' folder from the root of your SD card, along with the nx-modloader-gx app file from the 'switch' directory."
     />
 
     <brls:Box
@@ -342,7 +342,7 @@
 
     <brls:Label
         width="100%"
-        text="If it tries to enable a mod that uses files that another mod is already using (whether that other mod is managed by Simple Mod Alchemist or not), the mod will be enabled to the best extent it can be, but any conflicting files will not be used. The other mod's files will remain in use."
+        text="If it tries to enable a mod that uses files that another mod is already using (whether that other mod is managed by nx-modloader-gx or not), the mod will be enabled to the best extent it can be, but any conflicting files will not be used. The other mod's files will remain in use."
         marginBottom="30px"
     />
 

@@ -1,6 +1,6 @@
-# NX-ModLoader-GX
+# nx-modloader-gx
 
-NX-ModLoader-GX is the Fastest Nintendo Switch mod management app. Its forked well-known [SimpleModManager](https://github.com/nadrino/SimpleModManager) app with the efficient backend functionality of [Simple Mod Alchemist](https://github.com/gtiersma/state-alchemist), While Making it even more efficient on how mods are loaded with the introduction of mod packs
+nx-modloader-gx is the Fastest Nintendo Switch mod management app. Its forked well-known [SimpleModManager](https://github.com/nadrino/SimpleModManager) app with the efficient backend functionality of [nx-modloader-gx](https://github.com/gtiersma/state-alchemist), While Making it even more efficient on how mods are loaded with the introduction of mod packs
 
 <p align="center"><img src="./screenshots/full_sized.png" width="25%"></p>
 
@@ -53,7 +53,7 @@ NX-ModLoader-GX is the Fastest Nintendo Switch mod management app. Its forked we
 
 1. This assumes you already have a Nintendo Switch set up with Atmosphere CFW installed.
 
-2. Download the latest release of Simple Mod Alchemist, extracting its contents to the root of your SD card. The app can also be found on the homebrew app store.
+2. Download the latest release of nx-modloader-gx, extracting its contents to the root of your SD card. The app can also be found on the homebrew app store.
 
 3. There should now be a `mod_alchemy` folder in your SD card root.
 
@@ -71,11 +71,11 @@ NX-ModLoader-GX is the Fastest Nintendo Switch mod management app. Its forked we
 
 10. Create a backup. See the **Backups** section below.
 
-11. You're ready to use Simple Mod Alchemist! You can access it the same as you would any other Switch homebrew application.
+11. You're ready to use nx-modloader-gx! You can access it the same as you would any other Switch homebrew application.
 
 ## Backups
 
-It is highly recommended to backup the mods. It should be rare that any mod files get disorganized, but there's no guarantee it won't happen. If something ever begins to not work right in Simple Mod Alchemist or it begins crashing at some point, you can try restoring a backup if you have one.
+It is highly recommended to backup the mods. It should be rare that any mod files get disorganized, but there's no guarantee it won't happen. If something ever begins to not work right in nx-modloader-gx or it begins crashing at some point, you can try restoring a backup if you have one.
 
 When dealing with backups, it's important to keep in mind that the app operates by **moving mod files between `mod_alchemy` and `/atmosphere/contents/`**. Because of this, it's important that mods are being backed up ***properly***.
 
@@ -89,7 +89,7 @@ This method is safer and will also backup the current enabled/disabled statuses 
   * Copy both the `mod_alchemy` and `/atmosphere/contents/` folders from your SD card to a safe place.
 
 * **Maintaining the backup:**
-  * Any time mods are added for Simple Mod Alchemist, the backup will need to be updated with those new files.
+  * Any time mods are added for nx-modloader-gx, the backup will need to be updated with those new files.
   * Any time any mod files are *manually* added to ***any*** game under `/atmosphere/contents/`, the backup will need to be updated with those new files.
   * If you ever wish to recreate an entire new backup, both of the old backup folders must be deleted *first* before copying the new folders from the SD card. No merging folders.
 
@@ -107,7 +107,7 @@ This method is safer and will also backup the current enabled/disabled statuses 
   2. Now only the `mod_alchemy` folder needs to be copied from the SD card to a safe place.
 
 * **Maintaining the backup:**
-  * Any time mods are added for Simple Mod Alchemist, the backup will need to be updated with those new files.
+  * Any time mods are added for nx-modloader-gx, the backup will need to be updated with those new files.
   * If you ever wish to recreate an entire new backup, the old backup folder must be deleted *first* before copying the new folders from the SD card. No merging folders.
 
 * **Restoring the backup:**
@@ -126,7 +126,7 @@ Mods can be added to the app at any time by following the same instructions list
 
 ### Deleting Mods
 
-If there ever is a mod you're using that you want to delete permanently, **make sure to disable that mod in Simple Mod Alchemist first** if it isn't already disabled. This will make sure all files for that mod are returned to their original locations within the folders in `mod_alchemy`.
+If there ever is a mod you're using that you want to delete permanently, **make sure to disable that mod in nx-modloader-gx first** if it isn't already disabled. This will make sure all files for that mod are returned to their original locations within the folders in `mod_alchemy`.
 
 Once you're sure it's disabled, deleting the mod is as easy as deleting the `mod_alchemy/<game_name> (<title_id>)/<group_name>/<thing_being_modded>/<mod_name>` folder belonging to it from your SD card.
 
@@ -168,11 +168,11 @@ If there is already a file within `/atmosphere/contents/<title_id>/` with the sa
 
 Try using **Disable All Mods** in the app. Then try searching your SD card for that file's name. You should be able to see all the mods that use it. If some of those mods may have been enabled at the same time, that would've been the problem. You will need to try to sort out the conflicting files between them.
 
-If the file is still located within `/atmosphere/contents/<title_id>/` even after disabling all mods through the app, then that file does not belong to any of the mods in Simple Mod Alchemist. It was put there manually, so you will need to figure out why it's there and if you need it.
+If the file is still located within `/atmosphere/contents/<title_id>/` even after disabling all mods through the app, then that file does not belong to any of the mods in nx-modloader-gx. It was put there manually, so you will need to figure out why it's there and if you need it.
 
 Once the conflicting files are sorted out so that the files can now be moved to their spots within `/atmosphere/contents/<title_id>/`, the mod should now be able to be enabled fully.
 
-If there was no conflict to begin with, it could be from an infrequent bug that causes specific files to not be moved. This particular problem seems to be outside the Simple Mod Alchemist code, so there may be nothing that can be done about it at the moment, but it's infrequent, so it shouldn't happen often. But even if this bug occurs, the rest of the files should still be moving properly when enabling or disabling the mod, so there should be no need to worry about lost files.
+If there was no conflict to begin with, it could be from an infrequent bug that causes specific files to not be moved. This particular problem seems to be outside the nx-modloader-gx code, so there may be nothing that can be done about it at the moment, but it's infrequent, so it shouldn't happen often. But even if this bug occurs, the rest of the files should still be moving properly when enabling or disabling the mod, so there should be no need to worry about lost files.
 
 ---
 
@@ -220,7 +220,7 @@ See the **Backups** section to make sure it's being restored properly.
 
 For each game in app's game list, choose the **Disable All Mods** option before you delete anything.
 
-After doing so, delete the `mod_alchemy` folder from the root of your SD card, along with the Simple Mod Alchemist app file from the `switch` directory.
+After doing so, delete the `mod_alchemy` folder from the root of your SD card, along with the nx-modloader-gx app file from the `switch` directory.
 
 ---
 
@@ -240,7 +240,7 @@ The app will only touch its own mod files (including those that it moved into th
 
 ### How does the app handle conflicts between files?
 
-If it tries to enable a mod that uses files that another mod is already using (whether that other mod is managed by Simple Mod Alchemist or not), the mod will be enabled to the best extent it can be, but any conflicting files will not be used. The other mod's files will remain in use.
+If it tries to enable a mod that uses files that another mod is already using (whether that other mod is managed by nx-modloader-gx or not), the mod will be enabled to the best extent it can be, but any conflicting files will not be used. The other mod's files will remain in use.
 
 The app only moves non-conflicting files belonging to the mod being enabled. Whatever files are currently in `/atmosphere/contents/<title_id>/` will stay there.
 
@@ -250,9 +250,9 @@ For example, if you enable a mod with a file named `mario`, but there's already 
 
 # Advanced: Working Manually with Mods
 
-By understanding how Simple Mod Alchemist interacts with files and folders on the SD card, you can change the app's mods from any file explorer and maybe a text editor. This means it's also possible to create a script to automatically change/add/remove the app's mods as well.
+By understanding how nx-modloader-gx interacts with files and folders on the SD card, you can change the app's mods from any file explorer and maybe a text editor. This means it's also possible to create a script to automatically change/add/remove the app's mods as well.
 
-If doing any manual changing between mods as described here, be careful and don't make mistakes. If anything isn't named perfectly, it could brake how Simple Mod Alchemist manages mods, even causing it to crash.
+If doing any manual changing between mods as described here, be careful and don't make mistakes. If anything isn't named perfectly, it could brake how nx-modloader-gx manages mods, even causing it to crash.
 
 ### Enabled Mods
 
@@ -268,7 +268,7 @@ If there is no `.txt` file, that means no mod is enabled.
 
 2. Once you are sure you moved all the files listed in the `.txt` file, delete the `.txt` file.
 
-3. The next time you open Simple Mod Alchemist, it won't show the mod as being enabled, and the mod will be able change between other mods properly.
+3. The next time you open nx-modloader-gx, it won't show the mod as being enabled, and the mod will be able change between other mods properly.
 
 Once there is no mod enabled in the `mod_alchemy/<game_name> (<title_id>)/<group_name>/<thing_being_modded>/` folder, you can now manually enable a different mod if desired:
 
@@ -280,7 +280,7 @@ Once there is no mod enabled in the `mod_alchemy/<game_name> (<title_id>)/<group
 
 3. Move all folder(s) in `mod_alchemy/<game_name> (<title_id>)/<group_name>/<thing_being_modded>/<mod_name>/` to `/atmosphere/contents/<title_id>/`.
 
-4. The next time you open Simple Mod Alchemist, it will show the mod as enabled, and the mod will be able change between other mods properly.
+4. The next time you open nx-modloader-gx, it will show the mod as enabled, and the mod will be able change between other mods properly.
 
 # Super Advanced: Build From Source
 
@@ -346,7 +346,7 @@ sudo dkp-pacman -Suy -r /System/Volumes/Data
 git clone https://github.com/gtiersma/SimpleModAlchemist.git
 cd SimpleModAlchemist
 cmake -B build_switch -DPLATFORM_SWITCH=ON
-make -C build_switch Simple_Mod_Alchemist.nro -j$(nproc)
+make -C build_switch nx-modloader-gx.nro -j$(nproc)
 ```
 
 ## Special Thanks
