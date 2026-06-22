@@ -6,6 +6,8 @@
 
 #include <switch.h>
 
+#include <GameBrowser.h>
+#include <Game.h>
 #include <TabModOptions.h>
 
 #include <StateAlchemist/controller.h>
