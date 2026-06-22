@@ -112,7 +112,7 @@ std::string MetaManager::parseName(const std::string& folderName) {
 
   // Remove the locked character from the folder name if there is one.
   //
-  // Locking is an old feature from State Alchemist no longer supported.
+  // Locking is an old feature no longer supported.
   // Some old mods brought over from that app could still have this character at the begining.
   if (name[0] == '~') {
     name = name.substr(1);

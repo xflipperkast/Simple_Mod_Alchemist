@@ -12,7 +12,7 @@
 
     <brls:Label
         width="100%"
-        text="See 'Setup'."
+        text="See `Setup`."
     />
 
     <brls:Box
@@ -31,19 +31,19 @@
 
     <brls:Label
         width="100%"
-        text="If there ever is a mod that you want to delete permanently, make sure that mod is NOT active in nx-modloader-gx first. If it is active, change the mod so it's not. This will make sure all files for that mod are returned to their original locations within the mod's folder under `mod_alchemy`."
+        text="Disable the mod first, then delete its folder from `switch/Simple_Mod_alchemist/mods/<title_id>/`."
         marginBottom="30px"
     />
 
     <brls:Label
         width="100%"
-        text="Only once the mod is NOT in use, it can be removed as easy as deleting the `mod_alchemy/[-GAME-NAME-] ([-TITLE-ID-])/[-GROUP-]/[-THING-BEING-MODDED-]/[-MOD-NAME-]` folder belonging to it from your SD card."
+        text="If a mod is active, its files are in `/atmosphere/contents/<title_id>/`, so disabling it first puts them back."
         marginBottom="30px"
     />
 
     <brls:Label
         width="100%"
-        text="This is necessary because when a mod is currently being used, its files are currently mixed in with all the other enabled mod files within the '/atmosphere/contents/[-TITLE-ID-]/' folder. When the mod is changed to something else, the app will move the mod's files back to the original folder they were in: 'mod_alchemy/[-GAME-NAME-] ([-TITLE-ID-])/[-GROUP-]/[-THING-BEING-MODDED-]/[-MOD-NAME-]`. Then when you delete that folder, you can be sure all files for that mod are being deleted as well."
+        text="Keep the `romfs` and `exefs` structure intact when you move or rename folders."
     />
 
 </brls:Box>

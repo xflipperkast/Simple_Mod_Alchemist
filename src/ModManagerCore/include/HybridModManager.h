@@ -22,4 +22,5 @@ namespace HybridModManager {
   void setSingleModEnabled(u64 titleId, const std::string& modId, bool enabled, std::atomic<float>& progress);
   void applyModpack(u64 titleId, const std::string& modId, std::atomic<float>& progress);
   void disableActiveModpack(u64 titleId, std::atomic<float>& progress);
+  void disableAllMods(u64 titleId, std::atomic<float>& progress);
 }

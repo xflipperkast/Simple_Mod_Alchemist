@@ -5,13 +5,7 @@
 #ifndef SIMPLEMODMANAGER_TABMODOPTIONS_H
 #define SIMPLEMODMANAGER_TABMODOPTIONS_H
 
-#include <ModBrowser.h>
-
 #include <borealis.hpp>
-
-
-class FrameModBrowser;
-
 class TabModOptions : public brls::Box {
 
 public:

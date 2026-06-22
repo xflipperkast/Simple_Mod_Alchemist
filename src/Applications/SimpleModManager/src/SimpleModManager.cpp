@@ -8,22 +8,18 @@
 #include <FrameRoot.h>
 #include <TabGames.h>
 #include <help/TabHelp.h>
-#include <GroupBrowser.h>
 #include <TabModOptions.h>
 #include <TabHybridMods.h>
 
 #include <icon_applet.hpp>
 #include <note_cell.hpp>
 
-#include "ConfigHandler.h"
 #include <GameBrowser.h>
 
 #include <borealis.hpp>
 
 #include "switch.h"
-#include <StateAlchemist/controller.h>
 #include "StateAlchemist/constants.h"
-#include "StateAlchemist/fs_manager.h"
 
 
 using namespace brls::literals;
@@ -39,7 +35,6 @@ int main(int argc, char* argv[])
     // Register custom views (including tabs, which are views)
     brls::Application::registerXMLView("TabGames", TabGames::create);
     brls::Application::registerXMLView("TabHelp", TabHelp::create);
-    brls::Application::registerXMLView("GroupBrowser", GroupBrowser::create);
     brls::Application::registerXMLView("TabModOptions", TabModOptions::create);
     brls::Application::registerXMLView("TabHybridMods", TabHybridMods::createMods);
     brls::Application::registerXMLView("TabHybridModpacks", TabHybridMods::createModpacks);

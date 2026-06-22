@@ -14,49 +14,37 @@
 
     <brls:Label
         width="100%"
-        text="1. A folder named `nx-modloader-gx` now exists in switch folder. Within it, create a folder with the name of a game's title ID."
+        text="1. Create `switch/Simple_Mod_alchemist/mods/<title_id>/` on your SD card for each game."
         marginBottom="40px"
     />
 
     <brls:Label
         width="100%"
-        text="2. Within that folder, create folders for each group you want to categorize your mods in. Example: 'mod_alchemy/[ PUT TITLE ID HERE ]/Characters/'"
+        text="2. Put each single mod in its own folder inside that game folder."
         marginBottom="40px"
     />
 
     <brls:Label
         width="100%"
-        text="3. Within those folders, create folders for each thing in the game that you plan to replace with a mod. Example: 'mod_alchemy/[ PUT TITLE ID HERE ]/Characters/Mario/'"
+        text="3. Put `romfs` and/or `exefs` inside each mod folder."
         marginBottom="40px"
     />
 
     <brls:Label
         width="100%"
-        text="4. Within those folders, create folders for each mod you have. Example: 'mod_alchemy/[ PUT TITLE ID HERE ]/Characters/Mario/Spongebob/'"
+        text="4. Prefix a folder with `[PACK]_` if you want it treated as a modpack."
         marginBottom="40px"
     />
 
     <brls:Label
         width="100%"
-        text="5. Within those folders, move each mod's folder structure into its corresponding folder. The folder structure should typically begin with the 'romfs' folder (which should then contain the other folders and files that comprise the mod)."
+        text="5. Launch the app, select the game, and use the Mods and Modpacks tabs."
         marginBottom="40px"
     />
 
     <brls:Label
         width="100%"
-        text="6. Recommended, but optional: To backup mods properly, see 'Backups'."
-        marginBottom="40px"
-    />
-
-    <brls:Label
-        width="100%"
-        text="7. Have fun!"
-        marginBottom="40px"
-    />
-
-    <brls:Label
-        width="100%"
-        text="8. If this 'Quick Start' guide doesn't make sense, see 'Setup' for a more thorough explanation."
+        text="6. Use `Disable all mods` before moving files by hand."
         marginBottom="20px"
     />
 

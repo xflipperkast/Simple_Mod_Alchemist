@@ -3,9 +3,10 @@
 //
 
 #include "TabModOptions.h"
-#include "FrameModBrowser.h"
 
+#include <HybridModManager.h>
 #include <StateAlchemist/controller.h>
+
 #include <note_cell.hpp>
 #include <util.hpp>
 
@@ -21,15 +22,15 @@ void TabModOptions::buildDisableAllMods() {
   brls::NoteCell* disableAll = new brls::NoteCell();
   disableAll->setText("Disable all mods");
   disableAll->setNote(
-    "Turn all mods off for this game, returning all files to under the \"" + ALCHEMIST_FOLDER + "\" folder. "\
-    "This is useful if you want to delete some of them from the SD card."
+    "Turn all mods off for this game and move any enabled files back into the mod storage folder. "\
+    "This is useful if you want to delete or replace mods on the SD card."
   );
 
   disableAll->registerClickAction([](brls::View* view) {
     Util::buildConfirmDialog(
       "Disable all mods?",
       "Disabling all mods.",
-      [](std::atomic<float>& progress) { controller.deactivateAll(progress); }
+      [](std::atomic<float>& progress) { HybridModManager::disableAllMods(controller.titleId, progress); }
     )->open();
     return true;
   });

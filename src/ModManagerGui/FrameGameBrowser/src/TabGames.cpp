@@ -9,9 +9,6 @@
 #include "GenericToolbox.Switch.h"
 #include "GenericToolbox.Vector.h"
 
-#include <StateAlchemist/constants.h>
-#include <StateAlchemist/meta_manager.h>
-#include <StateAlchemist/controller.h>
 #include <Game.h>
 #include <util.hpp>
 #include <note_cell.hpp>

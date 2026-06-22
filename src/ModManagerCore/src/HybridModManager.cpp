@@ -489,3 +489,33 @@ void HybridModManager::disableActiveModpack(u64 titleId, std::atomic<float>& pro
   progress.store(1.0f);
   logStep("disableActiveModpack:done", titleId, "current=" + currentPack);
 }
+
+void HybridModManager::disableAllMods(u64 titleId, std::atomic<float>& progress) {
+  logStep("disableAllMods:start", titleId, "");
+  auto cfg = syncConfig(titleId);
+  auto& game = gameConfig(cfg, titleId);
+  auto& mods = game["mods"];
+  auto currentPack = game.value("active_modpack_folder", "");
+  auto contents = sdPath("atmosphere/contents") / titleIdString(titleId);
+  auto singles = enabledSingleMods(game);
+
+  fs::create_directories(contents);
+  if (!singles.empty()) {
+    removeSingleFiles(contents, singles, titleId);
+  }
+  if (!currentPack.empty()) {
+    detachCurrentPack(contents, currentPack);
+  }
+
+  game["active_modpack_folder"] = "";
+  for (auto& mod : mods) {
+    mod["is_enabled"] = false;
+    if (!mod.value("is_modpack", false)) {
+      mod["enabled_files"] = json::array();
+    }
+  }
+
+  saveConfig(cfg);
+  progress.store(1.0f);
+  logStep("disableAllMods:done", titleId, "");
+}

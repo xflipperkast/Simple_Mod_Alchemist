@@ -39,14 +39,8 @@ GameBrowser::GameBrowser(){}
 const ConfigHandler &GameBrowser::getConfigHandler() const {
   return _configHandler_;
 }
-ModManager &GameBrowser::getModManager(){
-  return _modManager_;
-}
 ConfigHandler &GameBrowser::getConfigHandler(){
   return _configHandler_;
-}
-ModsPresetHandler &GameBrowser::getModPresetHandler(){
-  return _modPresetHandler_;
 }
 std::vector<Game> &GameBrowser::getGameList(){
   return _gameList_;

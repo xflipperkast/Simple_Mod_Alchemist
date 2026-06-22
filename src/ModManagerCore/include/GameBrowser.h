@@ -5,9 +5,7 @@
 #ifndef SWITCHTEMPLATE_BROWSER_H
 #define SWITCHTEMPLATE_BROWSER_H
 
-#include <ModManager.h>
 #include <ConfigHandler.h>
-#include <ModsPresetHandler.h>
 #include <Game.h>
 
 #include <switch.h>
@@ -24,8 +22,6 @@ public:
 
   // getters
   const ConfigHandler &getConfigHandler() const;
-  ModManager &getModManager();
-  ModsPresetHandler &getModPresetHandler();
   ConfigHandler &getConfigHandler();
   std::vector<Game> &getGameList();
 
@@ -41,9 +37,7 @@ public:
   void selectGame(const Game& game);
 
 private:
-  ModManager _modManager_{this};
   ConfigHandler _configHandler_;
-  ModsPresetHandler _modPresetHandler_;
 
   std::vector<Game> _gameList_;
 

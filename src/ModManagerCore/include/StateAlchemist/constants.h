@@ -16,8 +16,6 @@ const int MAX_FS_ENTRY_LOAD = 50;
 const std::string RATING_DELIMITER = "~~";
 
 const std::string TXT_EXT = ".txt";
-const std::string ALCHEMIST_FOLDER = "mod_alchemy";
-const std::string ALCHEMIST_PATH = "/" + ALCHEMIST_FOLDER;
 const std::string ATMOSPHERE_PATH = "/atmosphere/contents/";
 
 // UI seems likely to hang if a control's label is much longer than this number

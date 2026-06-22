@@ -16,7 +16,7 @@ About::About(): brls::Box(brls::Axis::COLUMN) {
   brls::Label* shortDescription = new brls::Label();
   shortDescription->setText(
     "nx-modloader-gx is a Nintendo Switch homebrew app for changing game mods.\n"\
-    "It's the fusion of two other modding apps: SimpleModManager and State Alchemist.\n"
+    "It uses a hybrid mod manager that stores state on the SD card.\n"
   );
   shortDescription->setMarginTop(10.0);
   shortDescription->setMarginLeft(20.0);

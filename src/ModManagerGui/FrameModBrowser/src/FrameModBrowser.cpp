@@ -7,7 +7,6 @@
 #include <switch.h>
 
 #include <TabModOptions.h>
-#include <GroupBrowser.h>
 
 #include <StateAlchemist/controller.h>
 
