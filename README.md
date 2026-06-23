@@ -113,10 +113,28 @@ cmake -B build_switch -DPLATFORM_SWITCH=ON
 make -C build_switch nx-modloader-gx.nro -j$(nproc)
 ```
 
+## Credits
+
+Ggtiersma & nadrino
+nadrino: original SimpleModManager project and the UI work
+Ggtiersma: idea for moving files using State Alchemist. (still used for small mods)
+
+
 ## Legal Disclaimers
 
-This software is built for unofficial use on the Nintendo Switch. Nintendo is not affiliated with it.
+This software is built with the sole intention of running unofficially on the Nintendo Switch console. The Nintendo Switch is a product consisting of both hardware and software developed by Nintendo Co. Ltd. This software has not been licensed by Nintendo in any form. Nintendo is not affiliated with the creation of this software in any form.
 
 The Nintendo Switch logo is a trademark of Nintendo Co. Ltd.
+
+This software is purely a non-profit endeavor. Any usages of copyrighted material comprised within this software have not been used in a manner to gain compensation in any manner.
+
+All other portions of this software are licensed under the GPL 3.0 standard, giving the general public permission to use, modify, or distribute this software in accordance with the terms and conditions that can be viewed here.
+
+The author assumes no responsibility for any problems that may occur from modified derivative works from this software.
+
+This software is not intended to be used in any manner that involves or encourages digital piracy. The author assumes no responsibility for any crimes users may perform through the use of this software.
+
+The author provides no guarantee that the software will operate as intended or if it will operate at all. By using this software in any form or manner, you agree that the author will not be held responsible for any damage that may occur to the device(s) it may be used with, whether the damage be physical or digital.
+
 
 This software is provided without warranty. Use it at your own risk.
